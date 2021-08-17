@@ -67,7 +67,7 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                                                                                                             document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                         document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -87,10 +87,89 @@
         </main>
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
 integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/09caad5936.js" crossorigin="anonymous"></script>
+<script>
+    let baseUrl;
+    $(window).on('load', function() {
+        baseUrl = $('.base-url').val()
+        var error = $('#error').val();
+        if (error == "error") {
+            $('#createModal').modal('show');
+        } else if (error == "update error") {
+            $('#editModal').modal('show');
+            let urlAction = ($('#edit-url-error').val());
+            $('.form-edit').attr('action', urlAction);
+        }
+    });
+
+    $('.close').click(function() {
+        $('.form-control').removeClass("is-invalid");
+    })
+
+    $('.btn-create').click(function() {
+        $('input').val();
+    })
+
+
+
+    $('.edit').click(function() {
+        var id = $(this).data('id')
+        $('.form-edit').attr('action', `${baseUrl}/questions/${id}`);
+        $('#edit-url').val(`${baseUrl}/questions/${id}`);
+        $.ajax({
+            type: "GET",
+            url: `${baseUrl}/questions/` + id,
+            cache: false,
+            success: function(response) {
+                $('#edit-title').val(response.title);
+                $('#edit-question').val(response.question);
+                $('#edit-trueAnswer').val(response.trueAnswer);
+                $('#edit-falseAnswer1').val(response.falseAnswer1);
+                $('#edit-falseAnswer2').val(response.falseAnswer2);
+                $('#edit-falseAnswer3').val(response.falseAnswer3);
+                $('#edit-description').val(response.description);
+                $('#edit-quran').val(response.quran);
+                $('#edit-quranTranslate').val(response.quranTranslate);
+                $('#edit-hadits').val(response.hadits);
+                $('#edit-haditsTranslate').val(response.haditsTranslate);
+                $('#edit-kitab').val(response.kitab);
+                $('#edit-kitabTranslate').val(response.kitabTranslate);
+                $('#edit-mode').val(response.mode);
+                $('#edit-type').val(response.type);
+                $('#edit-oldAsset').val(response.asset);
+            }
+        });
+    })
+
+
+    $('.detail').click(function() {
+        $.ajax({
+            type: "GET",
+            url: `${baseUrl}/questions/` + $(this).data('id'),
+            cache: false,
+            success: function(response) {
+                $(".detail-title").text(response.title);
+                $(".detail-question").text(response.question);
+                $(".detail-trueAnswer").text(response.trueAnswer);
+                $(".detail-falseAnswer1").text(response.falseAnswer1);
+                $(".detail-falseAnswer2").text(response.falseAnswer2);
+                $(".detail-falseAnswer3").text(response.falseAnswer3);
+                $(".detail-description").text(response.description);
+                $(".detail-quran").text(response.quran);
+                $(".detail-quranTranslate").text(response.quranTranslate);
+                $(".detail-hadits").text(response.hadits);
+                $(".detail-haditsTranslate").text(response.haditsTranslate);
+                $(".detail-kitab").text(response.kitab);
+                $(".detail-kitabTranslate").text(response.kitabTranslate);
+                $(".detail-type").text(response.type);
+                $(".detail-mode").text(response.mode);
+            }
+        });
+    });
+</script>
 
 </html>
