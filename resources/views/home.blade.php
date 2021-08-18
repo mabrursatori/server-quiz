@@ -55,7 +55,7 @@
                                 <td>{{ $question->title }}</td>
                                 <td>{{ $question->type }}</td>
                                 <td>{{ $question->mode }}</td>
-                                <td><img src="{{ asset('public/storage/' . $question->asset) }}" width="70px" /></td>
+                                <td><img src="{{ asset('storage/' . $question->asset) }}" width="70px" /></td>
                                 <td>
                                     <a data-id="{{ $question->id }}" data-toggle="modal" data-target="#detailModal"
                                         class="btn btn-warning btn-sm detail"><i class="fa fa-exclamation"></i></a>
