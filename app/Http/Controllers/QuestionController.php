@@ -163,7 +163,7 @@ class QuestionController extends Controller
             $question->asset = $request->get('oldAsset');
         }
         $question->save();
-        return redirect('/')->with('status', 'Data successfully updated');
+        return redirect('/home')->with('status', 'Data successfully updated');
     }
 
     /**

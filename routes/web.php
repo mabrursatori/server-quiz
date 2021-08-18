@@ -13,14 +13,18 @@ use App\Http\Controllers\QuestionController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/', function () {
     // return view('welcome');
     return view('auth.login');
 });
 
 Auth::routes();
+Route::match(["GET", "POST"], "/register", function () {
+    return redirect("/login");
+})->name("register");
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/home', [QuestionController::class, 'index']);
+Route::get('/home', [QuestionController::class, 'index'])->middleware('auth');
 
-Route::resource('questions', QuestionController::class);
+Route::resource('questions', QuestionController::class)->middleware('auth');
