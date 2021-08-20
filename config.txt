@@ -2,3 +2,5 @@ username: bf0ee110cd9f89
 password: 053c3b11
 host: us-cdbr-east-04.cleardb.com
 db: heroku_87cfb3bc9dc0430?reconnect=true
+
+mysql --host=us-cdbr-east-04.cleardb.com --user=bf0ee110cd9f89 --password=053c3b11 --reconnect heroku_87cfb3bc9dc0430?reconnect=true

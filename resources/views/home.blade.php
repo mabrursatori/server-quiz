@@ -55,7 +55,7 @@
                                 <td>{{ $question->title }}</td>
                                 <td>{{ $question->type }}</td>
                                 <td>{{ $question->mode }}</td>
-                                <td><img src="{{ asset($question->asset) }}" width="70px" /></td>
+                                <td><img src="{{ $question->asset_url }}" width="70px" /></td>
                                 <td>
                                     <a data-id="{{ $question->id }}" data-toggle="modal" data-target="#detailModal"
                                         class="btn btn-warning btn-sm detail"><i class="fa fa-exclamation"></i></a>
@@ -450,10 +450,6 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-1">Update</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>

@@ -19,6 +19,7 @@ class QuestionController extends Controller
         $questions = Question::all();
 
         return view('home', ['questions' => $questions]);
+        //return $questions;
     }
 
     /**
@@ -76,7 +77,13 @@ class QuestionController extends Controller
         $question->type = $request->get('type');
         $question->mode = $request->get('mode');
         if ($request->file('asset')) {
-            $question->asset = $request->file('asset')->store('assets', 'public');
+            $file = $request->file('asset'); //MAKA KITA GET FILENYA
+            //BUAT CUSTOM NAME YANG DIINGINKAN, DIMANA FORMATNYA KALI INI ADALH EMAIL + TIME DAN MENGGUNAKAN ORIGINAL EXTENSION
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            //UPLOAD MENGGUNAKAN CONFIG S3, DENGAN FILE YANG DIMASUKKAN KE DALAM FOLDER IMAGES
+            //SECARA OTOMATIS AMAZON AKAN MEMBUAT FOLDERNYA JIKA BELUM ADA
+            Storage::disk('s3')->put('assets/' . $filename, file_get_contents($file));
+            $question->asset = $filename;
         }
         $question->save();
         return redirect('/home')->with('status', 'Data successfully created');
@@ -135,7 +142,7 @@ class QuestionController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect('/')
+            return redirect('/home')
                 ->withErrors($validator)
                 ->withInput()->with('status', 'update error');
         }
@@ -157,8 +164,14 @@ class QuestionController extends Controller
         $question->type = $request->get('type');
         $question->mode = $request->get('mode');
         if ($request->file('asset')) {
-            $question->asset = $request->file('asset')->store('assets', 'public');
-            Storage::delete('public/home' . $request->get('oldAsset'));
+            $file = $request->file('asset'); //MAKA KITA GET FILENYA
+            //BUAT CUSTOM NAME YANG DIINGINKAN, DIMANA FORMATNYA KALI INI ADALH EMAIL + TIME DAN MENGGUNAKAN ORIGINAL EXTENSION
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            //UPLOAD MENGGUNAKAN CONFIG S3, DENGAN FILE YANG DIMASUKKAN KE DALAM FOLDER IMAGES
+            //SECARA OTOMATIS AMAZON AKAN MEMBUAT FOLDERNYA JIKA BELUM ADA
+            Storage::disk('s3')->put('assets/' . $filename, file_get_contents($file));
+            Storage::disk('s3')->delete('assets/' . $request->get('oldAsset'));
+            $question->asset = $filename;
         } else {
             $question->asset = $request->get('oldAsset');
         }
@@ -174,8 +187,9 @@ class QuestionController extends Controller
      */
     public function destroy($id)
     {
-        $user = Question::findOrFail($id);
-        $user->delete();
+        $question = Question::findOrFail($id);
+        Storage::disk('s3')->delete('assets/' . $question->asset);
+        $question->delete();
         return redirect('/home')->with('status', 'Data successfully deleted');
     }
 }
